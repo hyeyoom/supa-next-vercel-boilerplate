@@ -24,3 +24,5 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 npx supabase login
 npx supabase gen types typescript --project-id [PROJECT_ID] --schema public > types/supabase.ts
 ```
+
+## test
