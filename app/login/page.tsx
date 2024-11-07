@@ -9,7 +9,7 @@ const LoginPage = () => {
         await supabase.auth.signInWithOAuth({
             provider: "google",
             options: {
-                redirectTo: 'http://localhost:3000/auth/callback',
+                redirectTo: process.env.NEXT_PUBLIC_SUPABASE_GOOGLE_CALLBACK_URL!,
             },
         })
     }
