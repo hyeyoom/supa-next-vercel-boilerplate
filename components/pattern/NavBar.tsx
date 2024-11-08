@@ -18,7 +18,7 @@ async function NavBar() {
     const {data: {user}} = await supabase.auth.getUser();
 
     return (
-        <div className="w-screen flex justify-center items-center p-6">
+        <div className="w-screen flex justify-center items-center p-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <NavigationMenu className="w-full max-w-7xl [&>div]:w-full [&>div]:flex-initial">
                 <NavigationMenuList className="w-full flex items-center">
                     <div className="flex-none">
