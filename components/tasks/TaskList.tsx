@@ -83,19 +83,32 @@ export default function TaskList() {
                 return;
             }
         } else {
-            // 새로운 달성 기록 생성
-            const { error } = await supabase
-                .from('todo_achievement')
-                .insert({
-                    template_id: task.id,
-                    user_id: user.id,
-                    status: 'completed',
-                    is_active: true,
-                });
+            // 기존의 달성 기록이 없을 경우에만 새로운 달성 기록 생성
+            if (!task.achievement) {
+                const { error } = await supabase
+                    .from('todo_achievement')
+                    .insert({
+                        template_id: task.id,
+                        user_id: user.id,
+                        status: 'completed',
+                        is_active: true,
+                    });
 
-            if (error) {
-                console.error('Error creating achievement:', error);
-                return;
+                if (error) {
+                    console.error('Error creating achievement:', error);
+                    return;
+                }
+            } else {
+                // 이미 존재하는 달성 기록이 있을 경우, 업데이트
+                const { error } = await supabase
+                    .from('todo_achievement')
+                    .update({ is_active: true })
+                    .eq('id', task.achievement.id);
+
+                if (error) {
+                    console.error('Error updating achievement:', error);
+                    return;
+                }
             }
         }
 
