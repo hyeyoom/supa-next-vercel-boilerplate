@@ -25,6 +25,7 @@ export default function TaskList() {
         
         // 사용자 정보 가져오기
         const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
         setUser(user);
 
         // 템플릿과 최신 달성 기록을 함께 가져오기
@@ -45,7 +46,7 @@ export default function TaskList() {
                     .from('todo_achievement')
                     .select('*')
                     .eq('template_id', template.id)
-                    .eq('user_id', user?.id)
+                    .eq('user_id', user.id)
                     .eq('is_active', true)
                     .order('achieved_at', { ascending: false })
                     .limit(1);
