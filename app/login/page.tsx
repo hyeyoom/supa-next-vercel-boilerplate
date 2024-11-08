@@ -1,6 +1,7 @@
 'use client'
 
 import {createSupabaseClientForBrowser} from "@/utils/supabase/client";
+import {Button} from "@/components/ui/button";
 
 const LoginPage = () => {
     const supabase = createSupabaseClientForBrowser()
@@ -17,7 +18,7 @@ const LoginPage = () => {
     return (
         <>
             <h1>Login Page</h1>
-            <button onClick={handleGoogleLogin}>Login With Google</button>
+            <Button onClick={handleGoogleLogin}>Login With Google</Button>
         </>
     )
 }
