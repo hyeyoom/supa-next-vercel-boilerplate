@@ -83,8 +83,35 @@ export default function TaskList() {
                 return;
             }
         } else {
-            // 기존의 달성 기록이 없을 경우에만 새로운 달성 기록 생성
-            if (!task.achievement) {
+            // 기존 레코드가 있는지 확인
+            const { data: existingAchievement, error: fetchError } = await supabase
+                .from('todo_achievement')
+                .select('*')
+                .eq('template_id', task.id)
+                .eq('user_id', user.id)
+                .single();
+
+            if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116는 레코드를 찾지 못했을 때의 에러
+                console.error('Error fetching existing achievement:', fetchError);
+                return;
+            }
+
+            if (existingAchievement) {
+                // 기존 레코드 재활성화
+                const { error } = await supabase
+                    .from('todo_achievement')
+                    .update({ 
+                        is_active: true,
+                        achieved_at: new Date().toISOString()
+                    })
+                    .eq('id', existingAchievement.id);
+
+                if (error) {
+                    console.error('Error updating achievement:', error);
+                    return;
+                }
+            } else {
+                // 새로운 달성 기록 생성
                 const { error } = await supabase
                     .from('todo_achievement')
                     .insert({
@@ -96,17 +123,6 @@ export default function TaskList() {
 
                 if (error) {
                     console.error('Error creating achievement:', error);
-                    return;
-                }
-            } else {
-                // 이미 존재하는 달성 기록이 있을 경우, 업데이트
-                const { error } = await supabase
-                    .from('todo_achievement')
-                    .update({ is_active: true })
-                    .eq('id', task.achievement.id);
-
-                if (error) {
-                    console.error('Error updating achievement:', error);
                     return;
                 }
             }
