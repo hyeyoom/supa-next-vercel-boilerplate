@@ -12,6 +12,7 @@ import Link from "next/link";
 import {cn} from "@/lib/utils";
 import {createSupabaseClientForServer} from "@/utils/supabase/server";
 import {LoginButton} from "@/components/auth/AuthButtons";
+import {ThemeToggle} from "@/components/theme/ThemeToggle";
 
 async function NavBar() {
     const supabase = await createSupabaseClientForServer();
@@ -56,7 +57,8 @@ async function NavBar() {
                         </NavigationMenuItem>
                     </div>
 
-                    <div className="flex-none">
+                    <div className="flex-none flex items-center gap-4">
+                        <ThemeToggle />
                         {user ? (
                             <NavigationMenu>
                                 <NavigationMenuList>
