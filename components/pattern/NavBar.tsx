@@ -13,6 +13,7 @@ import {cn} from "@/lib/utils";
 import {createSupabaseClientForServer} from "@/utils/supabase/server";
 import {LoginButton} from "@/components/auth/AuthButtons";
 import {ThemeToggle} from "@/components/theme/ThemeToggle";
+import Image from 'next/image';
 
 async function NavBar() {
     const supabase = await createSupabaseClientForServer();
@@ -64,12 +65,20 @@ async function NavBar() {
                                 <NavigationMenuList>
                                     <NavigationMenuItem>
                                         <NavigationMenuTrigger className="flex items-center gap-2">
-                                            <img 
-                                                src={user.user_metadata.avatar_url} 
-                                                alt="Profile" 
-                                                className="w-6 h-6 rounded-full"
-                                            />
-                                            <span>{user.user_metadata.full_name}</span>
+                                            {user.user_metadata?.avatar_url ? (
+                                                <Image
+                                                    src={user.user_metadata.avatar_url}
+                                                    alt="User avatar"
+                                                    width={32}
+                                                    height={32}
+                                                    className="rounded-full"
+                                                />
+                                            ) : (
+                                                <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+                                                    {user.email?.charAt(0).toUpperCase()}
+                                                </div>
+                                            )}
+                                            <span>{user.user_metadata?.full_name || user.email}</span>
                                         </NavigationMenuTrigger>
                                         <NavigationMenuContent>
                                             <ul className="w-48 p-2">
