@@ -6,10 +6,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { PlusCircle } from "lucide-react";
 import { useState } from "react";
 import { z } from "zod";
+import { createSupabaseClientForBrowser } from "@/utils/supabase/client";
 
 const taskFormSchema = z.object({
     title: z.string().min(1, "제목을 입력해주세요").max(100, "제목은 100자를 넘을 수 없습니다"),
     description: z.string().max(500, "설명은 500자를 넘을 수 없습니다").optional(),
+    repeat_type: z.string().default('none'),
 });
 
 type TaskForm = z.infer<typeof taskFormSchema>;
@@ -23,8 +25,10 @@ export function AddTaskForm() {
     const [form, setForm] = useState<TaskForm>({
         title: '',
         description: '',
+        repeat_type: 'none',
     });
     const [errors, setErrors] = useState<FormErrors>({});
+    const [isLoading, setIsLoading] = useState(false);
 
     const validateForm = () => {
         try {
@@ -47,13 +51,35 @@ export function AddTaskForm() {
         }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (validateForm()) {
-            console.log('Form submitted:', form);
-            // TODO: Supabase 연동
-            setForm({ title: '', description: '' });
+        if (!validateForm()) return;
+
+        setIsLoading(true);
+        try {
+            const supabase = createSupabaseClientForBrowser();
+            const { data: { user } } = await supabase.auth.getUser();
+            
+            if (!user) throw new Error("로그인이 필요합니다");
+
+            const { error } = await supabase
+                .from('todo_template')
+                .insert({
+                    title: form.title,
+                    description: form.description || '',
+                    repeat_type: form.repeat_type,
+                    user_id: user.id,
+                });
+
+            if (error) throw error;
+
+            setForm({ title: '', description: '', repeat_type: 'none' });
             setIsOpen(false);
+        } catch (error) {
+            console.error('Error creating task:', error);
+            alert('할 일을 추가하는 중 오류가 발생했습니다.');
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -79,6 +105,7 @@ export function AddTaskForm() {
                         placeholder="할 일을 입력하세요"
                         value={form.title}
                         onChange={(e) => setForm({ ...form, title: e.target.value })}
+                        disabled={isLoading}
                         required
                     />
                     {errors.title?.map((error) => (
@@ -93,6 +120,7 @@ export function AddTaskForm() {
                         className="min-h-[100px]"
                         value={form.description}
                         onChange={(e) => setForm({ ...form, description: e.target.value })}
+                        disabled={isLoading}
                     />
                     {errors.description?.map((error) => (
                         <p key={error} className="text-sm text-destructive">
@@ -106,11 +134,12 @@ export function AddTaskForm() {
                     type="button"
                     variant="ghost"
                     onClick={() => setIsOpen(false)}
+                    disabled={isLoading}
                 >
                     취소
                 </Button>
-                <Button type="submit">
-                    추가하기
+                <Button type="submit" disabled={isLoading}>
+                    {isLoading ? '추가 중...' : '추가하기'}
                 </Button>
             </div>
         </form>
