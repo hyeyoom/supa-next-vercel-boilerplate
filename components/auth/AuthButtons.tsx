@@ -17,7 +17,7 @@ export function LoginButton() {
     return (
         <Button 
             variant="outline" 
-            className="bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-600 flex gap-2 items-center"
+            className="bg-background text-foreground hover:bg-accent flex gap-2 items-center"
             onClick={handleLogin}
         >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
