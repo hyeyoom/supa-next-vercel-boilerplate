@@ -9,6 +9,47 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      todo_achievement: {
+        Row: {
+          achieved_at: string
+          completion_comment: string | null
+          id: string
+          is_active: boolean
+          status: string
+          template_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          achieved_at?: string
+          completion_comment?: string | null
+          id?: string
+          is_active?: boolean
+          status: string
+          template_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          achieved_at?: string
+          completion_comment?: string | null
+          id?: string
+          is_active?: boolean
+          status?: string
+          template_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "todo_achievement_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "todo_template"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       todo_template: {
         Row: {
           created_at: string
@@ -20,6 +61,7 @@ export type Database = {
           title: string
           updated_at: string
           user_id: string
+          visibility: string
         }
         Insert: {
           created_at?: string
@@ -31,6 +73,7 @@ export type Database = {
           title?: string
           updated_at?: string
           user_id?: string
+          visibility?: string
         }
         Update: {
           created_at?: string
@@ -42,6 +85,7 @@ export type Database = {
           title?: string
           updated_at?: string
           user_id?: string
+          visibility?: string
         }
         Relationships: []
       }
