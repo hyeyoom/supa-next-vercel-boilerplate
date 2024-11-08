@@ -7,6 +7,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recha
 import { startOfDay, endOfDay, format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { StatItem } from './types';
 
 interface Achievement {
     id: string;
@@ -18,7 +19,7 @@ interface Achievement {
 }
 
 export default function DailyStats() {
-    const [stats, setStats] = useState<any[]>([]);
+    const [stats, setStats] = useState<StatItem[]>([]);
     const [achievements, setAchievements] = useState<Achievement[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 

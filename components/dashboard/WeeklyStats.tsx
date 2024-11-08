@@ -6,9 +6,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { startOfWeek, endOfWeek, eachDayOfInterval, format } from 'date-fns';
 import { ko } from 'date-fns/locale';
+import { StatItem } from './types';
 
 export default function WeeklyStats() {
-    const [stats, setStats] = useState<any[]>([]);
+    const [stats, setStats] = useState<StatItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -35,9 +36,10 @@ export default function WeeklyStats() {
 
             // 일별로 그룹화
             const days = eachDayOfInterval({ start, end });
-            const dailyStats = days.map(day => ({
+            const dailyStats: StatItem[] = days.map(day => ({
                 date: format(day, 'EEE', { locale: ko }),
                 fullDate: format(day, 'yyyy-MM-dd'),
+                label: format(day, 'EEE', { locale: ko }),
                 count: 0
             }));
 

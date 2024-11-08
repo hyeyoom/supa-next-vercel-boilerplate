@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import DailyStats from "@/components/dashboard/DailyStats";
 import WeeklyStats from "@/components/dashboard/WeeklyStats";
