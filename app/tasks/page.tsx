@@ -1,4 +1,7 @@
+'use client';
+
 import { AddTaskForm } from "@/components/tasks/AddTaskForm";
+import TaskList from "@/components/tasks/TaskList";
 
 export default function TasksPage() {
     return (
@@ -11,6 +14,7 @@ export default function TasksPage() {
                     </p>
                 </div>
                 <AddTaskForm />
+                <TaskList />
             </div>
         </main>
     );
